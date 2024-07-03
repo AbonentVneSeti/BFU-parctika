@@ -118,6 +118,7 @@ int main()
         return 1;
     }
     music.play();
+    music.setLoop(true); 
     
     //рамка играть
     sf::RectangleShape playButton(sf::Vector2f(200, 50));
