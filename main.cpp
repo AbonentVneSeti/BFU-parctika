@@ -92,7 +92,7 @@ int main()
     //шрифт и открытие окна
     sf::RenderWindow window(sf::VideoMode(1920, 1080), "BlackJack");
     sf::Font font;
-    if (!font.loadFromFile("assets/LavirePersonalUse.otf"))
+    if (!font.loadFromFile("assets/different/LavirePersonalUse.otf"))
     {
         std::cerr << "Error to upload font :(" << std::endl;
         return 404;
@@ -100,7 +100,7 @@ int main()
 
     //фон игры
     sf::Texture backgroundTexture;
-    if (!backgroundTexture.loadFromFile("assets/background3.jpg"))
+    if (!backgroundTexture.loadFromFile("assets/backgrounds/background3.jpg"))
     {
         std::cerr << "Error to upload background :(" << std::endl;
         return 404;
@@ -178,7 +178,7 @@ int main()
 
     //курсор
     sf::Texture cursorTexture;
-    if (!cursorTexture.loadFromFile("assets/cursor.png")) 
+    if (!cursorTexture.loadFromFile("assets/different/cursor.png")) 
     {
         std::cerr << "Error to upload cursor :(" << std::endl;
         return 404;
