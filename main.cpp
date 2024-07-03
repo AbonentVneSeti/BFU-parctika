@@ -111,6 +111,14 @@ int main()
         (float)window.getSize().y / backgroundTexture.getSize().y
     );
 
+    sf::Music music;
+    if (!music.openFromFile("assets/different/mainmusic.wav"))
+    {
+        std::cerr << "Error to upload music :(" << std::endl;
+        return 1;
+    }
+    music.play();
+    
     //рамка играть
     sf::RectangleShape playButton(sf::Vector2f(200, 50));
     playButton.setFillColor(sf::Color::White);
