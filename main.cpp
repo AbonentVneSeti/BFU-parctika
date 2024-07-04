@@ -112,6 +112,45 @@ int main()
         return 404;
     }
 
+    //орнамент
+    sf::Texture ornament1;
+    if (!ornament1.loadFromFile("assets/different/ornament1.png"))
+    {
+        std::cerr << "Error to upload image ornament1 :(" << std::endl;
+        return 404;
+    }
+    sf::Sprite textureornament1(ornament1);
+    textureornament1.setPosition(500, 400);
+
+    sf::Texture ornament2;
+    if (!ornament2.loadFromFile("assets/different/ornament2.png"))
+    {
+        std::cerr << "Error to upload image ornament2 :(" << std::endl;
+        return 404;
+    }
+    sf::Sprite textureornament2(ornament2);
+    textureornament2.setPosition(900, 400);
+
+    //девушки
+    sf::Texture devushka1;
+    if (!devushka1.loadFromFile("assets/different/devushka1.png"))
+    {
+        std::cerr << "Error to upload image devushka1 :(" << std::endl;
+        return 404;
+    }
+    sf::Sprite texturedevushka1(devushka1);
+    texturedevushka1.setPosition(100, 430);
+
+    sf::Texture devushka2;
+    if (!devushka2.loadFromFile("assets/different/devushka2.png"))
+    {
+        std::cerr << "Error to upload image devushka2 :(" << std::endl;
+        return 404;
+    }
+    sf::Sprite texturedevushka2(devushka2);
+    texturedevushka2.setPosition(1400, 480);
+
+
     //фоны игры
     sf::Texture backgroundTexture1;
     if (!backgroundTexture1.loadFromFile("assets/backgrounds/background1.jpg"))
@@ -563,6 +602,10 @@ int main()
         //главное меню
         else
         {
+            window.draw(textureornament1);
+            window.draw(textureornament2);
+            window.draw(texturedevushka1);
+            window.draw(texturedevushka2);
             window.draw(blackjack);
             window.draw(playButton);
             window.draw(rulesButton);
