@@ -94,8 +94,8 @@ int main()
     setlocale(LC_ALL, "Russian");
 
     //открытие окна
-    sf::RenderWindow window(sf::VideoMode(1920, 1080), "BlackJack");
-    window.setFramerateLimit(144);
+    sf::RenderWindow window(sf::VideoMode(1920, 1080), "BlackJack", sf::Style::Fullscreen);
+    window.setFramerateLimit(60);
 
     //раздел шрифтов
     //шрифт 1 (для заголовков)
@@ -251,8 +251,6 @@ int main()
     sf::Sprite muteButton(muteTexture);
     muteButton.setPosition(1200.f, 350.f);
 
-
-
     //раздел кнопок гм
     //кнопка играть
     sf::RectangleShape playButton(sf::Vector2f(200, 50));
@@ -305,6 +303,7 @@ int main()
     blackjack.setPosition(635, 50);
     blackjack.setOutlineThickness(0.2);
 
+    //раздел кнопки играть
     //текст играть
     sf::Text playText;
     playText.setFont(font);
@@ -314,6 +313,42 @@ int main()
     playText.setPosition(960, 347);
     playText.setOutlineThickness(0.2);
 
+    sf::Texture player;
+    if (!player.loadFromFile("assets/different/1player.png"))
+    {
+        std::cerr << "Error to upload image 1player :(" << std::endl;
+        return 404;
+    }
+    sf::Sprite texture1player(player);
+    texture1player.setPosition(750, 400);
+
+    sf::Texture players;
+    if (!players.loadFromFile("assets/different/2players.png"))
+    {
+        std::cerr << "Error to upload image 2players :(" << std::endl;
+        return 404;
+    }
+    sf::Sprite texture2players(players);
+    texture2players.setPosition(1050, 400);
+
+    sf::Text oneText;
+    oneText.setFont(fonttext);
+    oneText.setCharacterSize(30);
+    oneText.setString(L"1 игрок");
+    oneText.setFillColor(sf::Color::White);
+    oneText.setPosition(777, 600);
+    oneText.setOutlineThickness(0.4);
+
+    sf::Text twoText;
+    twoText.setFont(fonttext);
+    twoText.setCharacterSize(30);
+    twoText.setString(L"2 игрока");
+    twoText.setFillColor(sf::Color::White);
+    twoText.setPosition(1080, 600);
+    twoText.setOutlineThickness(0.4);
+
+
+    //раздел правил
     //текст правил
     sf::Text rulesText;
     rulesText.setFont(font);
@@ -560,9 +595,9 @@ int main()
         return 404;
     }
     sf::Sprite cursorSprite0(cursorTexture0);
-    cursorSprite0.setOrigin(cursorTexture0.getSize().x / 2.0f, cursorTexture0.getSize().y / 2.0f);
+    cursorSprite0.setOrigin(cursorTexture0.getSize().x / 5.0f, cursorTexture0.getSize().y / 5.0f);
     cursorSprite0.setPosition(100.f, 100.f);
-    cursorSprite0.setScale(0.05f, 0.05f);
+    cursorSprite0.setScale(0.04f, 0.04f);
     window.setMouseCursorVisible(false);
 
     sf::Texture cursorTexture1;
@@ -792,6 +827,13 @@ int main()
         //играть
         if (showPlay)
         {
+            window.draw(textureramka);
+            window.draw(texturedevushka1);
+            window.draw(texturedevushka2);
+            window.draw(texture1player);
+            window.draw(texture2players);
+            window.draw(twoText);
+            window.draw(oneText);
             window.draw(backButton);
             window.draw(backText);
         }
