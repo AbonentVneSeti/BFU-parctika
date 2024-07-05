@@ -481,7 +481,7 @@ int main()
         return 404;
     }
     sf::Sprite textureminibg2(minibg2);
-    textureminibg2.setPosition(937, 530);
+    textureminibg2.setPosition(950, 530);
 
     sf::Texture minibg3;
     if (!minibg3.loadFromFile("assets/different/minibg3.png"))
@@ -490,34 +490,34 @@ int main()
         return 404;
     }
     sf::Sprite textureminibg3(minibg3);
-    textureminibg3.setPosition(1077, 530);
+    textureminibg3.setPosition(1100, 530);
 
     //подписи фонов
     sf::Text theme1Text;
     theme1Text.setFont(fonttext);
-    theme1Text.setCharacterSize(20);
-    theme1Text.setString(L"Красная");
+    theme1Text.setCharacterSize(30);
+    theme1Text.setString("Red");
     theme1Text.setFillColor(sf::Color::White);
     themeText.setOutlineColor(sf::Color::Black);
-    theme1Text.setPosition(805, 650);
+    theme1Text.setPosition(805, 700);
     theme1Text.setOutlineThickness(0.4);
 
     sf::Text theme2Text;
     theme2Text.setFont(fonttext);
-    theme2Text.setCharacterSize(20);
-    theme2Text.setString(L"Зелёная");
+    theme2Text.setCharacterSize(30);
+    theme2Text.setString("Green");
     theme2Text.setFillColor(sf::Color::White);
     theme2Text.setOutlineColor(sf::Color::Black);
-    theme2Text.setPosition(945, 650);
+    theme2Text.setPosition(943, 700);
     theme2Text.setOutlineThickness(0.4);
 
     sf::Text theme3Text;
     theme3Text.setFont(fonttext);
-    theme3Text.setCharacterSize(20);
-    theme3Text.setString(L"Синяя");
+    theme3Text.setCharacterSize(30);
+    theme3Text.setString("Blue");
     theme3Text.setFillColor(sf::Color::White);
     theme3Text.setOutlineColor(sf::Color::Black);
-    theme3Text.setPosition(1095, 650);
+    theme3Text.setPosition(1105, 700);
     theme3Text.setOutlineThickness(0.4);
 
     //текст авторов
