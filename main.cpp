@@ -200,14 +200,43 @@ int main()
     );
 
     //раздел музыки
-    sf::Music music;
-    if (!music.openFromFile("assets/different/mainmusic.wav"))
+    bool mus0 = true, redmus = false, greenmus = false, bluemus = false;
+    sf::Music musicmain;
+    if (!musicmain.openFromFile("assets/different/musicred.wav"))
     {
-        std::cerr << "Error to upload music :(" << std::endl;
+        std::cerr << "Error to upload musicred :(" << std::endl;
         return 404;
     }
-    music.play();
-    music.setLoop(true);
+    if (mus0)
+    {
+        musicmain.play();
+        musicmain.setLoop(true);
+    }
+    else
+    {
+        musicmain.pause();
+    }
+
+    sf::Music musicred;
+    if (!musicred.openFromFile("assets/different/musicred.wav"))
+    {
+        std::cerr << "Error to upload musicred :(" << std::endl;
+        return 404;
+    }
+
+    sf::Music musicgreen;
+    if (!musicgreen.openFromFile("assets/different/musicgreen.wav"))
+    {
+        std::cerr << "Error to upload musicgreen :(" << std::endl;
+        return 404;
+    }
+
+    sf::Music musicblue;
+    if (!musicblue.openFromFile("assets/different/musicblue.wav"))
+    {
+        std::cerr << "Error to upload musicblue :(" << std::endl;
+        return 404;
+    }
 
     sf::Texture muteTexture;
     if (!muteTexture.loadFromFile("assets/different/playmusic.png")) {
@@ -625,27 +654,71 @@ int main()
                         float sliderX = mousePos.x - sliderBackground.getPosition().x;
                         volume = sliderX / sliderBackground.getSize().x;
                         sliderThumb.setPosition(sliderBackground.getPosition().x + sliderX - sliderThumb.getSize().x / 2, sliderBackground.getPosition().y);
-                        music.setVolume(volume * 100);
+                        musicred.setVolume(volume * 100);
                     }
-                    //кнопка мута звука
+                    //кнопка мута звука для каждой из песен темы
                     if (muteButton.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
                     {
-                        mutingmusic = !mutingmusic; // Изменяем состояние мута
-                        if (mutingmusic)
+                        mutingmusic = !mutingmusic;
+                        if(mus0)
                         {
-                            music.pause(); // Мутим музыку
-                            muteButton.setTexture(unmuteTexture); // Меняем текстуру на "включен звук"
+                            if (mutingmusic)
+                            {
+                                musicmain.pause();
+                                muteButton.setTexture(unmuteTexture);
+                            }
+                            else
+                            {
+                                musicmain.play();
+                                muteButton.setTexture(muteTexture);
+                            }
                         }
-                        else 
+                        else if (redmus)
                         {
-                        music.play(); // Включаем звук
-                        muteButton.setTexture(muteTexture); // Меняем текстуру на "отключен звук"
+                            if (mutingmusic)
+                            {
+                                musicred.pause();
+                                muteButton.setTexture(unmuteTexture);
+                            }
+                            else
+                            {
+                                musicred.play();
+                                muteButton.setTexture(muteTexture);
+                            }
                         }
+                        else if (greenmus)
+                        {
+                            if (mutingmusic)
+                            {
+                                musicgreen.pause();
+                                muteButton.setTexture(unmuteTexture);
+                            }
+                            else
+                            {
+                                musicgreen.play();
+                                muteButton.setTexture(muteTexture);
+                            }
+                        }
+                        else
+                        {
+                            mutingmusic = !mutingmusic;
+                            if (mutingmusic)
+                            {
+                                musicblue.pause();
+                                muteButton.setTexture(unmuteTexture);
+                            }
+                            else
+                            {
+                                musicblue.play();
+                                muteButton.setTexture(muteTexture);
+                            }
+                        }
+
                     }
+
                     //замена фона
-                
-                   if (textureminibg1.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
-                   {
+                    if (textureminibg1.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
+                    {
                        currentCursor = &cursorSprite1;
                        sliderThumb.setFillColor(sf::Color(186, 34, 33, 255));
                        background0.setTexture(backgroundTexture1);
@@ -653,27 +726,58 @@ int main()
                        (float)window.getSize().x / backgroundTexture1.getSize().x,
                        (float)window.getSize().y / backgroundTexture1.getSize().y
                             );
-                   }
-                   else if (textureminibg2.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
-                   {
+                       mus0 = false, redmus = true, greenmus = false, bluemus = false;
+                       if (redmus && !greenmus && !bluemus)
+                       {
+                           musicmain.pause();
+                           musicblue.pause();
+                           musicgreen.pause();
+                           musicred.play();
+                           musicred.setLoop(true);
+                       }
+                    }
+                    else if (textureminibg2.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
+                    {
                        currentCursor = &cursorSprite2;
+                       musicgreen.play();
+                       musicgreen.setLoop(true);
                        sliderThumb.setFillColor(sf::Color(78, 123, 50, 255));
                        background0.setTexture(backgroundTexture2);
                        background0.setScale(
                        (float)window.getSize().x / backgroundTexture2.getSize().x,
                        (float)window.getSize().y / backgroundTexture2.getSize().y
                             );
-                   }
-                   else if (textureminibg3.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
-                   {
+                       mus0 = false, redmus = false, greenmus = true, bluemus = false;
+                       if (!redmus && greenmus && !bluemus)
+                       {
+                           musicmain.pause();
+                           musicred.pause();
+                           musicblue.pause();
+                           musicgreen.play();
+                           musicgreen.setLoop(true);
+                       }
+                    }
+                    else if (textureminibg3.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
+                    {
                        currentCursor = &cursorSprite3;
+                       musicblue.play();
+                       musicblue.setLoop(true);
                        sliderThumb.setFillColor(sf::Color(44, 72, 160, 255));
                        background0.setTexture(backgroundTexture3);
                        background0.setScale(
                        (float)window.getSize().x / backgroundTexture3.getSize().x,
                        (float)window.getSize().y / backgroundTexture3.getSize().y
                             );
-                   }
+                       mus0 = false, redmus = false, greenmus = false, bluemus = true;
+                       if (!redmus && !greenmus && bluemus)
+                       {
+                           musicmain.pause();
+                           musicred.pause();
+                           musicgreen.pause();
+                           musicblue.play();
+                           musicblue.setLoop(true);
+                       }
+                    }
                 }
             }
         }
