@@ -655,6 +655,9 @@ int main()
                         volume = sliderX / sliderBackground.getSize().x;
                         sliderThumb.setPosition(sliderBackground.getPosition().x + sliderX - sliderThumb.getSize().x / 2, sliderBackground.getPosition().y);
                         musicred.setVolume(volume * 100);
+                        musicblue.setVolume(volume * 100);
+                        musicgreen.setVolume(volume * 100);
+                        musicmain.setVolume(volume * 100);
                     }
                     //кнопка мута звука для каждой из песен темы
                     if (muteButton.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
