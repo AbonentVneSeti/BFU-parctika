@@ -4,6 +4,7 @@ Tasks:
 2. Make a game menu. - done
 3. Make an algorithm for the game.
 4. Make classes for objects.
-5. Prepare a cmake file. - done
-6. Check for bugs.
-7. Done.
+5. Splitting into files
+6. Prepare a cmake file. - done
+7. Check for bugs.
+8. Done.
