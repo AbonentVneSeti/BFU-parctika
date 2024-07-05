@@ -97,6 +97,7 @@ int main()
     sf::RenderWindow window(sf::VideoMode(1920, 1080), "BlackJack");
     window.setFramerateLimit(144);
 
+    //раздел шрифтов
     //шрифт 1 (для заголовков)
     sf::Font font;
     if (!font.loadFromFile("assets/different/LavirePersonalUse.otf"))
@@ -113,7 +114,7 @@ int main()
         return 404;
     }
 
-    //орнамент
+    //раздел орнаментов
     sf::Texture ornament1;
     if (!ornament1.loadFromFile("assets/different/ornament1.png"))
     {
@@ -132,7 +133,7 @@ int main()
     sf::Sprite textureornament2(ornament2);
     textureornament2.setPosition(900, 400);
 
-    //девушки
+    //раздел девушек :D
     sf::Texture devushka1;
     if (!devushka1.loadFromFile("assets/different/devushka1.png"))
     {
@@ -152,7 +153,7 @@ int main()
     texturedevushka2.setPosition(1400, 480);
 
 
-    //фоны игры
+    //раздел фонов игры
     //фон 0 как начальный (красный)
     sf::Texture backgroundTexture0;
     backgroundTexture0.loadFromFile("assets/backgrounds/background1.jpg");
@@ -198,6 +199,7 @@ int main()
         (float)window.getSize().y / backgroundTexture3.getSize().y
     );
 
+    //раздел музыки
     sf::Music music;
     if (!music.openFromFile("assets/different/mainmusic.wav"))
     {
@@ -207,6 +209,22 @@ int main()
     music.play();
     music.setLoop(true);
 
+    sf::Texture muteTexture;
+    if (!muteTexture.loadFromFile("assets/different/playmusic.png")) {
+        std::cerr << "Error to upload image playmusic :(" << std::endl;
+        return 404;
+    }
+    sf::Texture unmuteTexture;
+    if (!unmuteTexture.loadFromFile("assets/different/mutemusic.png")) {
+        std::cerr << "Error to upload image mutemusic :(" << std::endl;
+        return 404;
+    }
+    sf::Sprite muteButton(muteTexture);
+    muteButton.setPosition(1200.f, 350.f);
+
+
+
+    //раздел кнопок гм
     //кнопка играть
     sf::RectangleShape playButton(sf::Vector2f(200, 50));
     playButton.setFillColor(sf::Color(255, 255, 255, 128));
@@ -248,13 +266,14 @@ int main()
     exitButton.setPosition(900, 550);
     sf::FloatRect exitButtonRect = exitButton.getGlobalBounds();
 
+    //раздел содержания нажатия кнопок гм
     //текст blackjack
     sf::Text blackjack;
     blackjack.setFont(font);
     blackjack.setCharacterSize(150);
     blackjack.setString("BlackJack");
     blackjack.setFillColor(sf::Color(191, 174, 22, 255));
-    blackjack.setPosition(650, 50);
+    blackjack.setPosition(635, 50);
     blackjack.setOutlineThickness(0.2);
 
     //текст играть
@@ -367,7 +386,7 @@ int main()
     sliderBackground.setFillColor(sf::Color(255, 255, 255, 150));
     sliderBackground.setPosition(776.f, 350.f);
     sf::RectangleShape sliderThumb(sf::Vector2f(50.f, 50.f));
-    sliderThumb.setFillColor(sf::Color(191, 174, 22, 250));
+    sliderThumb.setFillColor(sf::Color(186, 34, 33, 255));
     sliderThumb.setPosition(1127.f, 350.f);
     float volume = 1.0f;
 
@@ -503,7 +522,7 @@ int main()
     exitText.setPosition(968, 547);
     exitText.setOutlineThickness(0.2);
 
-    //курсор
+    //раздел курсоров
     //курсор 0(начальный)
     sf::Texture cursorTexture0;
     if (!cursorTexture0.loadFromFile("assets/different/cursor1.png")) 
@@ -553,8 +572,9 @@ int main()
     sf::Sprite* currentCursor = &cursorSprite0;
 
 
-
+    //раздел вывода изображений
     //здесь компилятор разбирается, что ему нужно задействовать, а что нужно отключить...
+    bool mutingmusic = false;
     bool showPlay = false, showRules = false, showSettings = false, showAuthors = false;
     while (window.isOpen())
     {
@@ -596,9 +616,10 @@ int main()
                     showAuthors = false;
                 }
 
-                //ползунок звука
+                //раздел настроек
                 if (showSettings)
                 {
+                    //ползунок звука
                     if (!showPlay && !showRules && !showAuthors && sliderBackground.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
                     {
                         float sliderX = mousePos.x - sliderBackground.getPosition().x;
@@ -606,37 +627,53 @@ int main()
                         sliderThumb.setPosition(sliderBackground.getPosition().x + sliderX - sliderThumb.getSize().x / 2, sliderBackground.getPosition().y);
                         music.setVolume(volume * 100);
                     }
-                }
-                //замена фона
-                if (showSettings)
-                {
-                    if (textureminibg1.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
+                    //кнопка мута звука
+                    if (muteButton.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
                     {
-                        currentCursor = &cursorSprite1;
-                        background0.setTexture(backgroundTexture1);
-                        background0.setScale(
-                            (float)window.getSize().x / backgroundTexture1.getSize().x,
-                            (float)window.getSize().y / backgroundTexture1.getSize().y
-                        );
+                        mutingmusic = !mutingmusic; // Изменяем состояние мута
+                        if (mutingmusic)
+                        {
+                            music.pause(); // Мутим музыку
+                            muteButton.setTexture(unmuteTexture); // Меняем текстуру на "включен звук"
+                        }
+                        else 
+                        {
+                        music.play(); // Включаем звук
+                        muteButton.setTexture(muteTexture); // Меняем текстуру на "отключен звук"
+                        }
                     }
-                    else if (textureminibg2.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
-                    {
-                        currentCursor = &cursorSprite2;
-                        background0.setTexture(backgroundTexture2);
-                        background0.setScale(
-                            (float)window.getSize().x / backgroundTexture2.getSize().x,
-                            (float)window.getSize().y / backgroundTexture2.getSize().y
-                        );
-                    }
-                    else if (textureminibg3.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
-                    {
-                        currentCursor = &cursorSprite3;
-                        background0.setTexture(backgroundTexture3);
-                        background0.setScale(
-                            (float)window.getSize().x / backgroundTexture3.getSize().x,
-                            (float)window.getSize().y / backgroundTexture3.getSize().y
-                        );
-                    }
+                    //замена фона
+                
+                   if (textureminibg1.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
+                   {
+                       currentCursor = &cursorSprite1;
+                       sliderThumb.setFillColor(sf::Color(186, 34, 33, 255));
+                       background0.setTexture(backgroundTexture1);
+                       background0.setScale(
+                       (float)window.getSize().x / backgroundTexture1.getSize().x,
+                       (float)window.getSize().y / backgroundTexture1.getSize().y
+                            );
+                   }
+                   else if (textureminibg2.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
+                   {
+                       currentCursor = &cursorSprite2;
+                       sliderThumb.setFillColor(sf::Color(78, 123, 50, 255));
+                       background0.setTexture(backgroundTexture2);
+                       background0.setScale(
+                       (float)window.getSize().x / backgroundTexture2.getSize().x,
+                       (float)window.getSize().y / backgroundTexture2.getSize().y
+                            );
+                   }
+                   else if (textureminibg3.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
+                   {
+                       currentCursor = &cursorSprite3;
+                       sliderThumb.setFillColor(sf::Color(44, 72, 160, 255));
+                       background0.setTexture(backgroundTexture3);
+                       background0.setScale(
+                       (float)window.getSize().x / backgroundTexture3.getSize().x,
+                       (float)window.getSize().y / backgroundTexture3.getSize().y
+                            );
+                   }
                 }
             }
         }
@@ -658,6 +695,7 @@ int main()
             window.draw(backButton);
             window.draw(backText);
             window.draw(valueText);
+            window.draw(muteButton);
             window.draw(sliderBackground);
             window.draw(sliderThumb);
             window.draw(themeText);
