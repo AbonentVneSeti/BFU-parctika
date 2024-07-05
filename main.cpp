@@ -90,6 +90,7 @@ namespace AVS
 
 int main()
 {
+
     setlocale(LC_ALL, "Russian");
 
     //открытие окна
@@ -152,6 +153,15 @@ int main()
 
 
     //фоны игры
+    //фон 0 как начальный (красный)
+    sf::Texture backgroundTexture0;
+    backgroundTexture0.loadFromFile("assets/backgrounds/background1.jpg");
+    sf::Sprite background0(backgroundTexture0);
+    background0.setScale(
+        (float)window.getSize().x / backgroundTexture0.getSize().x,
+        (float)window.getSize().y / backgroundTexture0.getSize().y
+    );
+
     sf::Texture backgroundTexture1;
     if (!backgroundTexture1.loadFromFile("assets/backgrounds/background1.jpg"))
     {
@@ -494,22 +504,58 @@ int main()
     exitText.setOutlineThickness(0.2);
 
     //курсор
-    sf::Texture cursorTexture;
-    if (!cursorTexture.loadFromFile("assets/different/cursor.png")) 
+    //курсор 0(начальный)
+    sf::Texture cursorTexture0;
+    if (!cursorTexture0.loadFromFile("assets/different/cursor1.png")) 
     {
         std::cerr << "Error to upload cursor :(" << std::endl;
         return 404;
     }
-    sf::Sprite cursorSprite(cursorTexture);
-    cursorSprite.setOrigin(cursorTexture.getSize().x / 2.0f, cursorTexture.getSize().y / 2.0f);
-    cursorSprite.setPosition(100.f, 100.f);
-    cursorSprite.setScale(0.05f, 0.05f);
+    sf::Sprite cursorSprite0(cursorTexture0);
+    cursorSprite0.setOrigin(cursorTexture0.getSize().x / 2.0f, cursorTexture0.getSize().y / 2.0f);
+    cursorSprite0.setPosition(100.f, 100.f);
+    cursorSprite0.setScale(0.05f, 0.05f);
     window.setMouseCursorVisible(false);
 
+    sf::Texture cursorTexture1;
+    if (!cursorTexture1.loadFromFile("assets/different/cursor1.png"))
+    {
+        std::cerr << "Error to upload cursor :(" << std::endl;
+        return 404;
+    }
+    sf::Sprite cursorSprite1(cursorTexture1);
+    cursorSprite1.setOrigin(cursorTexture1.getSize().x / 2.0f, cursorTexture1.getSize().y / 2.0f);
+    cursorSprite1.setPosition(100.f, 100.f);
+    cursorSprite1.setScale(0.05f, 0.05f);
+
+    sf::Texture cursorTexture2;
+    if (!cursorTexture2.loadFromFile("assets/different/cursor2.png"))
+    {
+        std::cerr << "Error to upload cursor :(" << std::endl;
+        return 404;
+    }
+    sf::Sprite cursorSprite2(cursorTexture2);
+    cursorSprite2.setOrigin(cursorTexture2.getSize().x / 2.0f, cursorTexture2.getSize().y / 2.0f);
+    cursorSprite2.setPosition(100.f, 100.f);
+    cursorSprite2.setScale(0.05f, 0.05f);
+
+    sf::Texture cursorTexture3;
+    if (!cursorTexture3.loadFromFile("assets/different/cursor3.png"))
+    {
+        std::cerr << "Error to upload cursor :(" << std::endl;
+        return 404;
+    }
+    sf::Sprite cursorSprite3(cursorTexture3);
+    cursorSprite3.setOrigin(cursorTexture3.getSize().x / 2.0f, cursorTexture3.getSize().y / 2.0f);
+    cursorSprite3.setPosition(100.f, 100.f);
+    cursorSprite3.setScale(0.05f, 0.05f);
+
+    sf::Sprite* currentCursor = &cursorSprite0;
+
+
+
     //здесь компилятор разбирается, что ему нужно задействовать, а что нужно отключить...
-    bool showRules = false;
-    bool showSettings = false;
-    bool showAuthors = false;
+    bool showPlay = false, showRules = false, showSettings = false, showAuthors = false;
     while (window.isOpen())
     {
         sf::Event event;
@@ -522,48 +568,91 @@ int main()
             else if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
             {
                 sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                if (!showRules && !showAuthors && !showSettings && exitButtonRect.contains(mousePos.x, mousePos.y))
+                if (!showPlay && !showRules && !showSettings && !showAuthors && exitButtonRect.contains(mousePos.x, mousePos.y))
                 {
                     window.close();
                 }
-                if (!showSettings && !showAuthors && rulesButton.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
+                if (!showRules && !showSettings && !showAuthors && playButton.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
+                {
+                    showPlay = true;
+                }
+                else if (!showPlay && !showRules && !showSettings && rulesButton.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
                 {
                     showRules = true;
                 }
-                else if (!showSettings && !showRules && authorsButton.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
-                {
-                    showAuthors = true;
-   
-                }
-                else if (!showAuthors && !showRules && settingsButton.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
+                else if (!showPlay && !showRules && !showAuthors && settingsButton.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
                 {
                     showSettings = true;
                 }
-                if ((showRules || showAuthors || showSettings) && backButton.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
+                else if (!showPlay && !showRules && !showSettings && authorsButton.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
                 {
-                    showRules = false;
-                    showAuthors = false;
-                    showSettings = false;
+                    showAuthors = true;
                 }
-                if (sliderBackground.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos))) 
+                if ((showPlay || showRules || showAuthors || showSettings) && backButton.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
                 {
-                    float sliderX = mousePos.x - sliderBackground.getPosition().x;
-                    volume = sliderX / sliderBackground.getSize().x;
-                    sliderThumb.setPosition(sliderBackground.getPosition().x + sliderX - sliderThumb.getSize().x / 2, sliderBackground.getPosition().y);
-                    music.setVolume(volume * 100);
+                    showPlay = false;
+                    showRules = false;
+                    showSettings = false;
+                    showAuthors = false;
+                }
+
+                //ползунок звука
+                if (showSettings)
+                {
+                    if (!showPlay && !showRules && !showAuthors && sliderBackground.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
+                    {
+                        float sliderX = mousePos.x - sliderBackground.getPosition().x;
+                        volume = sliderX / sliderBackground.getSize().x;
+                        sliderThumb.setPosition(sliderBackground.getPosition().x + sliderX - sliderThumb.getSize().x / 2, sliderBackground.getPosition().y);
+                        music.setVolume(volume * 100);
+                    }
+                }
+                //замена фона
+                if (showSettings)
+                {
+                    if (textureminibg1.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
+                    {
+                        currentCursor = &cursorSprite1;
+                        background0.setTexture(backgroundTexture1);
+                        background0.setScale(
+                            (float)window.getSize().x / backgroundTexture1.getSize().x,
+                            (float)window.getSize().y / backgroundTexture1.getSize().y
+                        );
+                    }
+                    else if (textureminibg2.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
+                    {
+                        currentCursor = &cursorSprite2;
+                        background0.setTexture(backgroundTexture2);
+                        background0.setScale(
+                            (float)window.getSize().x / backgroundTexture2.getSize().x,
+                            (float)window.getSize().y / backgroundTexture2.getSize().y
+                        );
+                    }
+                    else if (textureminibg3.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
+                    {
+                        currentCursor = &cursorSprite3;
+                        background0.setTexture(backgroundTexture3);
+                        background0.setScale(
+                            (float)window.getSize().x / backgroundTexture3.getSize().x,
+                            (float)window.getSize().y / backgroundTexture3.getSize().y
+                        );
+                    }
                 }
             }
         }
 
-        sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-        cursorSprite.setPosition(static_cast<sf::Vector2f>(mousePos));
-
         //давайте рисовать!
         window.clear(sf::Color::White);
-        window.draw(background1);
+        window.draw(background0);
 
+        //играть
+        if (showPlay)
+        {
+            window.draw(backButton);
+            window.draw(backText);
+        }
         //настройки
-        if (showSettings)
+        else if (showSettings)
         {
             window.draw(settingText);
             window.draw(backButton);
@@ -602,6 +691,7 @@ int main()
         //главное меню
         else
         {
+
             window.draw(textureornament1);
             window.draw(textureornament2);
             window.draw(texturedevushka1);
@@ -619,7 +709,9 @@ int main()
             window.draw(exitText);
         }
 
-        window.draw(cursorSprite);
+        sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+        currentCursor->setPosition(static_cast<sf::Vector2f>(mousePos));
+        window.draw(*currentCursor);
         window.display();
     }
 
