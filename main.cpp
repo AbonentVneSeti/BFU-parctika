@@ -6,6 +6,7 @@
 
 #include <random>
 #include <ctime>
+#include <windows.h>
 
 namespace AVS
 {
@@ -66,6 +67,8 @@ namespace AVS
 
         deck() = default;
 
+        ~deck() = default;
+
         void add_card(int value)//добавить карту, заданую только значением
         {
             d_array.push_back(card(value));
@@ -110,7 +113,25 @@ namespace AVS
                 add_card( i % 13 + 1 );
             }
         }
+        void erase(int i)
+        {
+            if (i >= d_array.size() || i < 0)
+                throw std::exception("[deck:erase] wrong element");
+            
+            d_array.erase(d_array.begin() + i);
+        }
 
+        int size()
+        {
+            return d_array.size();
+        }
+
+        card& operator[] (int i)
+        {
+            return d_array[i];
+        }
+
+        /*
         void random_sort()// перефасовать колоду
         {
             if(d_array.size() == 0)
@@ -118,6 +139,7 @@ namespace AVS
 
             //todo 
         }
+        */
     };
 
     class chip // фишка для ставки
@@ -203,18 +225,23 @@ namespace AVS
             return p_bet;
         }
 
-        void take_card_from_deck(deck other) // берется последняя карта в колоде
+        void take_card_from_deck(deck& other) // берется последняя карта в колоде
         {
             if (other.d_array.size() == 0)
                 throw std::exception("[player:take_card_from_deck] empty deck");
-            p_deck_in_hand.add_card(other.d_array[other.d_array.size()-1]);
+
+            p_deck_in_hand.add_card(other[other.d_array.size()-1]);
+            other.erase(other.d_array.size() - 1);
         }
 
-        void take_rand_card_from_deck(deck other) // берется случайная карта в колоде
+        void take_rand_card_from_deck(deck& other) // берется случайная карта в колоде
         {
             if (other.d_array.size() == 0)
                 throw std::exception("[player:take_rand_card_from_deck] empty deck");
-            p_deck_in_hand.add_card(other.d_array[( rand() % other.d_array.size() )]);
+
+            int i = rand() % other.d_array.size();
+            p_deck_in_hand.add_card(other[i]);
+            other.erase(i);
         }
 
         void take_card(card A) // берется заданная карта
@@ -227,9 +254,9 @@ namespace AVS
             if(p_deck_in_hand.d_array.empty())
                 return 0;
             int tmp = 0;
-            for (int i = 0; i < p_deck_in_hand.d_array.size(); i++)
+            for (int i = 0; i < p_deck_in_hand.size(); i++)
             {
-                tmp += p_deck_in_hand.d_array[i].get_value();
+                tmp += p_deck_in_hand[i].get_value();
             }
             return tmp;
         }
@@ -252,9 +279,15 @@ int main()
     AVS::deck X; //как оно бля называется
 
     const int start_size = 52; //размер колоды
+    int all_money = 10000;
 
     bool exit = true;//штука для выхода
     bool first_move = true; // первый ход
+    bool dealers_move = false; // ход дилера
+    bool win = false; // в случае победы
+    bool lose = false; // в случае поражения
+    bool push = false; // в случае пуша
+
 
     while (exit)
     {
@@ -262,14 +295,22 @@ int main()
         {
             X.fill_in_order(start_size);
 
-            std::cout << "Input your bet: 100, 250, 500, 1000, 2500 or 10000" << std::endl;
+            std::cout << "Input your bet: 0, 100, 250, 500, 1000, 2500 or 10000" << std::endl;
             int tmp = -1;
             AVS::chip bet;
             while (!bet.set_value(tmp))
             {
                 std::cin >> tmp;
+                if (tmp > all_money)
+                {
+                    std::cout << "out of money" << std::endl;
+                    tmp = -1;
+                }
             }
+            player.set_bet(AVS::chip(tmp));
+
             std::cout << "Successful" << std::endl;
+            
             
             for (int i = 0; i < 2; i++)
             {
@@ -277,13 +318,130 @@ int main()
                 dealer.take_rand_card_from_deck(X);
             }
 
+            if (player.check_value_in_hand() >= 21 || dealer.check_value_in_hand() >= 21)
+            {
+                int pl_tmp = player.check_value_in_hand();
+                int dl_tmp = dealer.check_value_in_hand();
+
+                if (pl_tmp == dl_tmp)
+                    push = true;
+                else if (pl_tmp == 21)
+                    win = true;
+                else if (dl_tmp == 21)
+                    lose = true;
+                else if (pl_tmp < dl_tmp)
+                    win = true;
+                else
+                    lose = true;
+            }
+
             first_move = false;
         }
 
-        //todo
+        if (dealers_move)
+        {
+            Sleep(1000);
 
+            dealer.take_rand_card_from_deck(X);
+            if (dealer.check_value_in_hand() > 21)
+            {
+                win = true;
+                //dealers_move = false;
+            }
+            if (dealer.check_value_in_hand() == 21 || dealer.check_value_in_hand() > player.check_value_in_hand())
+            {
+                lose = true;
+                //dealers_move = false;
+            }
+        }
+
+        system("cls");
+        std::cout << "your bet: " << player.get_bet().get_value() << "     all your money: " << all_money << std::endl;
+        std::cout << "your score: " << player.check_value_in_hand() << std::endl;
+        std::cout << "dealer score: " << dealer.check_value_in_hand() << std::endl;
+
+        if (!(dealers_move || (win || lose || push)))
+        {
+            std::cout << "moves:\n1 - take card\n2 - enough\n3 - exit" << std::endl;
+            int move;
+            do
+            {
+                std::cin >> move;
+            } while (move != 1 && move != 2 && move != 3);
+
+            switch (move)
+            {
+            case 1:
+                player.take_rand_card_from_deck(X);
+                if (player.check_value_in_hand() > 21)
+                {
+                    lose = true;
+                }
+                if (player.check_value_in_hand() == 21)
+                {
+                    win = true;
+                }
+                break;
+            case 2:
+                dealers_move = true;
+                break;
+            case 3:
+                exit = false;
+                break;
+            default:
+                break;
+            }
+        }
+        if (win || lose || push)
+        {
+            std::string output_message;
+            if (win)
+            {
+                all_money += player.get_bet().get_value();
+                win = false;
+                output_message = "You win!";
+            }
+            else if (lose)
+            {
+                all_money -= player.get_bet().get_value();
+                lose = false;
+                output_message = "You lose!";
+            }
+            else if (push)
+            {
+                push = false;
+                output_message = "Push!";
+            }
+            system("cls");
+            std::cout << "your bet: " << player.get_bet().get_value() << "     all your money: " << all_money << std::endl;
+            std::cout << "your score: " << player.check_value_in_hand() << std::endl;
+            std::cout << "dealer score: " << dealer.check_value_in_hand() << std::endl;
+            std::cout << output_message << std::endl;
+            std::cout << "1 - restart\n3 - exit" << std::endl;
+            int move;
+            do
+            {
+                std::cin >> move;
+            } while (move != 1 && move != 3);
+            switch (move)
+            {
+            case 1:
+                first_move = true;
+                dealers_move = false;
+                win = false;
+                lose = false;
+                push = false;
+                player.set_bet(0);
+                player.clear_deck();
+                dealer.clear_deck();
+                break;
+            case 3:
+                exit = false;
+                break;
+            default:
+                break;
+            }
+        }
     }
-    
-
     return 0;
 }
