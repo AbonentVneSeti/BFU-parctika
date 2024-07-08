@@ -94,7 +94,8 @@ int main()
     setlocale(LC_ALL, "Russian");
 
     //открытие окна
-    sf::RenderWindow window(sf::VideoMode(1920, 1080), "BlackJack", sf::Style::Fullscreen);
+    //sf::Style::Fullscreen
+    sf::RenderWindow window(sf::VideoMode(1920, 1080), "BlackJack");
     window.setFramerateLimit(60);
 
     //раздел шрифтов
@@ -260,13 +261,21 @@ int main()
     playButton.setScale(1.0f, 0.9f);
     playButton.setPosition(900, 350);
 
+    //кнопка статистики
+    sf::RectangleShape statButton(sf::Vector2f(200, 50));
+    statButton.setFillColor(sf::Color(255, 255, 255, 128));
+    statButton.setOutlineColor(sf::Color::Black);
+    statButton.setOutlineThickness(2);
+    statButton.setScale(1.0f, 0.9f);
+    statButton.setPosition(900, 400);
+
     //кнопка правил
     sf::RectangleShape rulesButton(sf::Vector2f(200, 50));
     rulesButton.setFillColor(sf::Color(255, 255, 255, 128));
     rulesButton.setOutlineColor(sf::Color::Black);
     rulesButton.setOutlineThickness(2);
     rulesButton.setScale(1.0f, 0.9f);
-    rulesButton.setPosition(900, 400);
+    rulesButton.setPosition(900, 450);
 
     //кнопка настроек
     sf::RectangleShape settingsButton(sf::Vector2f(200, 50));
@@ -274,7 +283,7 @@ int main()
     settingsButton.setOutlineColor(sf::Color::Black);
     settingsButton.setOutlineThickness(2);
     settingsButton.setScale(1.0f, 0.9f);
-    settingsButton.setPosition(900, 450);
+    settingsButton.setPosition(900, 500);
 
     //кнопка авторов
     sf::RectangleShape authorsButton(sf::Vector2f(200, 50));
@@ -282,7 +291,7 @@ int main()
     authorsButton.setOutlineColor(sf::Color::Black);
     authorsButton.setOutlineThickness(2);
     authorsButton.setScale(1.0f, 0.9f);
-    authorsButton.setPosition(900, 500);
+    authorsButton.setPosition(900, 550);
 
     //кнопка выхода
     sf::RectangleShape exitButton(sf::Vector2f(200, 50));
@@ -290,7 +299,7 @@ int main()
     exitButton.setOutlineColor(sf::Color::Black);
     exitButton.setOutlineThickness(2);
     exitButton.setScale(1.0f, 0.9f);
-    exitButton.setPosition(900, 550);
+    exitButton.setPosition(900, 600);
     sf::FloatRect exitButtonRect = exitButton.getGlobalBounds();
 
     //раздел содержания нажатия кнопок гм
@@ -347,6 +356,37 @@ int main()
     twoText.setPosition(1080, 600);
     twoText.setOutlineThickness(0.4);
 
+    //раздел статистики
+    //текст статистики
+    sf::Text statText;
+    statText.setFont(font);
+    statText.setCharacterSize(40);
+    statText.setString("Statistic");
+    statText.setFillColor(sf::Color::Black);
+    statText.setPosition(925, 397);
+    statText.setOutlineThickness(0.2);
+
+    //Statistic
+    sf::Text statmainText;
+    statmainText.setFont(font);
+    statmainText.setCharacterSize(150);
+    statmainText.setString("Statistic");
+    statmainText.setFillColor(sf::Color::White);
+    statmainText.setOutlineThickness(2);
+    statmainText.setPosition(680, 40);
+    statmainText.setOutlineThickness(0.2);
+
+
+    //рамка статистики
+    sf::Texture statramka;
+    if (!statramka.loadFromFile("assets/different/statramka.png"))
+    {
+        std::cerr << "Error to upload image statramka :(" << std::endl;
+        return 404;
+    }
+    sf::Sprite texturestatramka(statramka);
+    texturestatramka.setPosition(625, 200);
+    
 
     //раздел правил
     //текст правил
@@ -355,7 +395,7 @@ int main()
     rulesText.setCharacterSize(40);
     rulesText.setString("Rules");
     rulesText.setFillColor(sf::Color::Black);
-    rulesText.setPosition(953, 397);
+    rulesText.setPosition(953, 447);
     rulesText.setOutlineThickness(0.2);
 
     sf::Text mainrules;
@@ -417,13 +457,14 @@ int main()
     backText.setPosition(1250, 740);
     backText.setOutlineThickness(0.2);
 
+    //раздел настроек
     //текст настроек
     sf::Text settingsText;
     settingsText.setFont(font);
     settingsText.setCharacterSize(40);
     settingsText.setString("Settings");
     settingsText.setFillColor(sf::Color::Black);
-    settingsText.setPosition(929, 447);
+    settingsText.setPosition(931, 498);
     settingsText.setOutlineThickness(0.2);
 
     //Settings
@@ -434,7 +475,7 @@ int main()
     settingText.setFillColor(sf::Color::White);
     settingText.setPosition(700, 50);
     settingText.setOutlineThickness(0.2);
-
+    
     //громкость музыки
     sf::Text valueText;
     valueText.setFont(fonttext);
@@ -526,7 +567,7 @@ int main()
     authorsText.setCharacterSize(40);
     authorsText.setString("Authors");
     authorsText.setFillColor(sf::Color::Black);
-    authorsText.setPosition(929, 497);
+    authorsText.setPosition(928, 548);
     authorsText.setOutlineThickness(0.2);
 
     //Authors
@@ -535,7 +576,7 @@ int main()
     authorText.setCharacterSize(150);
     authorText.setString("Authors");
     authorText.setFillColor(sf::Color::White);
-    authorText.setPosition(700, 50);
+    authorText.setPosition(1500, 1500);
     authorText.setOutlineThickness(0.2);
 
     //Kravchuk Svetozar
@@ -583,7 +624,7 @@ int main()
     exitText.setCharacterSize(40);
     exitText.setString("Exit");
     exitText.setFillColor(sf::Color::Black);
-    exitText.setPosition(968, 547);
+    exitText.setPosition(970, 597);
     exitText.setOutlineThickness(0.2);
 
     //раздел курсоров
@@ -639,7 +680,7 @@ int main()
     //раздел вывода изображений
     //здесь компилятор разбирается, что ему нужно задействовать, а что нужно отключить...
     bool mutingmusic = false;
-    bool showPlay = false, showRules = false, showSettings = false, showAuthors = false;
+    bool showPlay = false, showStatic = false, showRules = false, showSettings = false, showAuthors = false;
     while (window.isOpen())
     {
         sf::Event event;
@@ -652,29 +693,34 @@ int main()
             else if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
             {
                 sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                if (!showPlay && !showRules && !showSettings && !showAuthors && exitButtonRect.contains(mousePos.x, mousePos.y))
+                if (!showPlay && !showStatic && !showRules && !showSettings && !showAuthors && exitButtonRect.contains(mousePos.x, mousePos.y))
                 {
                     window.close();
                 }
-                if (!showRules && !showSettings && !showAuthors && playButton.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
+                if (!showStatic && !showRules && !showSettings && !showAuthors && playButton.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
                 {
                     showPlay = true;
                 }
-                else if (!showPlay && !showRules && !showSettings && rulesButton.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
+                else if (!showPlay && !showRules && !showSettings && !showAuthors && statButton.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
+                {
+                    showStatic = true;
+                }
+                else if (!showPlay && !showStatic && !showRules && !showSettings && rulesButton.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
                 {
                     showRules = true;
                 }
-                else if (!showPlay && !showRules && !showAuthors && settingsButton.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
+                else if (!showPlay && !showStatic && !showRules && !showAuthors && settingsButton.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
                 {
                     showSettings = true;
                 }
-                else if (!showPlay && !showRules && !showSettings && authorsButton.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
+                else if (!showPlay && !showStatic && !showRules && !showSettings && authorsButton.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
                 {
                     showAuthors = true;
                 }
-                if ((showPlay || showRules || showAuthors || showSettings) && backButton.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
+                if ((showPlay || showStatic || showRules || showAuthors || showSettings) && backButton.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
                 {
                     showPlay = false;
+                    showStatic = false;
                     showRules = false;
                     showSettings = false;
                     showAuthors = false;
@@ -837,6 +883,14 @@ int main()
             window.draw(backButton);
             window.draw(backText);
         }
+
+        else if (showStatic)
+        {
+            window.draw(statmainText);
+            window.draw(texturestatramka);
+            window.draw(backButton);
+            window.draw(backText);
+        }
         //настройки
         else if (showSettings)
         {
@@ -878,18 +932,19 @@ int main()
         //главное меню
         else
         {
-
             window.draw(textureornament1);
             window.draw(textureornament2);
             window.draw(texturedevushka1);
             window.draw(texturedevushka2);
             window.draw(blackjack);
             window.draw(playButton);
+            window.draw(statButton);
             window.draw(rulesButton);
             window.draw(settingsButton);
             window.draw(authorsButton);
             window.draw(exitButton);
             window.draw(playText);
+            window.draw(statText);
             window.draw(rulesText);
             window.draw(settingsText);
             window.draw(authorsText);
