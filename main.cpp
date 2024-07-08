@@ -265,21 +265,24 @@ namespace AVS
         {
             p_deck_in_hand.clear_deck();
         }
+
+        deck& get_deck()
+        {
+            return p_deck_in_hand;
+        }
     };
 
 }
 
 int main()
 {
-    srand(time(NULL));
-
     AVS::player player;
     AVS::player dealer;
 
-    AVS::deck X; //как оно бля называется
+    short start_size = 52;// размер колоды
+    int all_money = 10000; //все деньги, желательно тоже считывать из файла
 
-    const int start_size = 52; //размер колоды
-    int all_money = 10000;
+    AVS::deck X; //я всё ещё не знаю как его назвать
 
     bool exit = true;//штука для выхода
     bool first_move = true; // первый ход
@@ -288,17 +291,18 @@ int main()
     bool lose = false; // в случае поражения
     bool push = false; // в случае пуша
 
-
     while (exit)
     {
-        if (first_move)
+        if (first_move) //первый ход
         {
-            X.fill_in_order(start_size);
+            X.fill_in_order(start_size);//перезаполняем колоду
 
+            std::cout << "Your money: " << all_money << std::endl;
             std::cout << "Input your bet: 0, 100, 250, 500, 1000, 2500 or 10000" << std::endl;
+
             int tmp = -1;
             AVS::chip bet;
-            while (!bet.set_value(tmp))
+            while (!bet.set_value(tmp)) // цикл для считывания ставки, в случае, с сфмл, то легче сделать просто кнопки, устанавливающие сумму ставки
             {
                 std::cin >> tmp;
                 if (tmp > all_money)
@@ -310,57 +314,20 @@ int main()
             player.set_bet(AVS::chip(tmp));
 
             std::cout << "Successful" << std::endl;
-            
-            
-            for (int i = 0; i < 2; i++)
+
+
+            for (int i = 0; i < 2; i++) //берутся по 2 карты игроку и дилеру, можно добавить сразу две анимации
             {
                 player.take_rand_card_from_deck(X);
                 dealer.take_rand_card_from_deck(X);
             }
 
-            if (player.check_value_in_hand() >= 21 || dealer.check_value_in_hand() >= 21)
-            {
-                int pl_tmp = player.check_value_in_hand();
-                int dl_tmp = dealer.check_value_in_hand();
-
-                if (pl_tmp == dl_tmp)
-                    push = true;
-                else if (pl_tmp == 21)
-                    win = true;
-                else if (dl_tmp == 21)
-                    lose = true;
-                else if (pl_tmp < dl_tmp)
-                    win = true;
-                else
-                    lose = true;
-            }
-
             first_move = false;
+
+            Sleep(500);
+            system("cls");
         }
-
-        if (dealers_move)
-        {
-            Sleep(1000);
-
-            dealer.take_rand_card_from_deck(X);
-            if (dealer.check_value_in_hand() > 21)
-            {
-                win = true;
-                //dealers_move = false;
-            }
-            if (dealer.check_value_in_hand() == 21 || dealer.check_value_in_hand() > player.check_value_in_hand())
-            {
-                lose = true;
-                //dealers_move = false;
-            }
-        }
-
-        system("cls");
-        std::cout << "your bet: " << player.get_bet().get_value() << "     all your money: " << all_money << std::endl;
-        std::cout << "your score: " << player.check_value_in_hand() << std::endl;
-        std::cout << "dealer score: " << dealer.check_value_in_hand() << std::endl;
-
-        if (!(dealers_move || (win || lose || push)))
+        else if (!dealers_move) // ход игрока; здесь нужно заменить cin на кнопки, а также добавить анимацию взятия карты
         {
             std::cout << "moves:\n1 - take card\n2 - enough\n3 - exit" << std::endl;
             int move;
@@ -371,52 +338,74 @@ int main()
 
             switch (move)
             {
-            case 1:
+            case 1://взятие карты
                 player.take_rand_card_from_deck(X);
-                if (player.check_value_in_hand() > 21)
-                {
-                    lose = true;
-                }
-                if (player.check_value_in_hand() == 21)
-                {
-                    win = true;
-                }
                 break;
-            case 2:
+            case 2://передача хода
                 dealers_move = true;
                 break;
-            case 3:
+            case 3://выход, он не нужен если через сфмл
                 exit = false;
                 break;
             default:
                 break;
             }
         }
-        if (win || lose || push)
+        else if (dealers_move)//тоже логическая часть, можно добавить сюда анимацию взятия карт для дилера
         {
-            std::string output_message;
+            if (dealer.check_value_in_hand() <= player.check_value_in_hand())
+            {
+                dealer.take_rand_card_from_deck(X);
+            }
+        }
+
+        //check win
+        {//чисто логическая часть, не трогаем, пусть работает
+            short pltmp = player.check_value_in_hand();
+            short dltmp = dealer.check_value_in_hand();
+
+            if (pltmp == dltmp && pltmp >= 21)
+                push = true;
+            else if (pltmp == 21)
+                win = true;
+            else if (dltmp == 21)
+                lose = true;
+            else if (pltmp > 21 && dltmp < 21)
+                lose = true;
+            else if (pltmp < 21 && dltmp > 21)
+                win = true;
+            else if (pltmp > 21 && dltmp > 21)
+            {
+                if (pltmp < dltmp)
+                    win = true;
+                else
+                    lose = true;
+            }
+            else if (dltmp > pltmp && dealers_move)
+                lose = true;
+        }
+
+        //базовый вывод, заменить на постоянный вывод в сфмле, там ну как-нибудь.
+        system("cls");
+        std::cout << "your bet: " << player.get_bet().get_value() << "     all your money: " << all_money << std::endl;
+        std::cout << "your score: " << player.check_value_in_hand() << std::endl;
+        std::cout << "dealer score: " << dealer.check_value_in_hand() << std::endl;
+
+        if (win || lose || push) // cout заменить на вывод сообщения на экран.
+        {
             if (win)
             {
+                std::cout << "You win!" << std::endl;
                 all_money += player.get_bet().get_value();
-                win = false;
-                output_message = "You win!";
             }
-            else if (lose)
+            if (lose)
             {
+                std::cout << "You lose!" << std::endl;
                 all_money -= player.get_bet().get_value();
-                lose = false;
-                output_message = "You lose!";
             }
-            else if (push)
-            {
-                push = false;
-                output_message = "Push!";
-            }
-            system("cls");
-            std::cout << "your bet: " << player.get_bet().get_value() << "     all your money: " << all_money << std::endl;
-            std::cout << "your score: " << player.check_value_in_hand() << std::endl;
-            std::cout << "dealer score: " << dealer.check_value_in_hand() << std::endl;
-            std::cout << output_message << std::endl;
+            else
+                std::cout << "push" << std::endl;
+
             std::cout << "1 - restart\n3 - exit" << std::endl;
             int move;
             do
@@ -425,7 +414,7 @@ int main()
             } while (move != 1 && move != 3);
             switch (move)
             {
-            case 1:
+            case 1://restart
                 first_move = true;
                 dealers_move = false;
                 win = false;
@@ -434,14 +423,38 @@ int main()
                 player.set_bet(0);
                 player.clear_deck();
                 dealer.clear_deck();
+                system("cls");
                 break;
-            case 3:
+            case 3://выход
                 exit = false;
                 break;
             default:
                 break;
             }
         }
+        Sleep(300);
     }
+
     return 0;
 }
+
+//так, описание работы краткое
+// сначала идёт 
+//      либо первый ход, т.е. устанавливается ставка, берутся 2 карты и т.д.
+//      либо ход игрока, т.е. возможность просто выключить прогу(ну это тебе не надо), взять карту, и передать ход дилеру
+//      либо ход дилера, который берет карту, если у него меньше очков, чем у игрока.
+// после 1-й из этих операций идёт проверка победы(или непобеды), которая просто меняет булы победы or поражения or пуша на труе
+// ну и после всего идёт проверка на win,lose,push, и если что-то из этого есть, то игроку даётся возможность выйти, или играть следующую,
+//      соотв-но меняются и деньги и т.д., устанавливается первый ход
+// потом цикл повторяется
+
+
+//получить общий счёт всех карт в колоде игрока:    player.check_value_in_hand()
+//получить колоду игрока:                           player.get_deck()
+//получить карту в колоде игрока:                   player.get_deck()[i], где i - номер нужной карты в колоде.
+//получить счёт карты в колоде игрока:              player.get_deck()[i].get_value()
+//получить путь к текстуре конкретной карты:        player.get_deck()[i].get_texture_path()
+
+
+//получить путь к текстуре фишки(Ставки) у игрока:  player.get_bet().get_texture_path()
+//получить значение фишки(Ставки) у игрока:  player.get_bet().get_value()
