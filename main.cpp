@@ -343,7 +343,7 @@ int main()
     sf::Text oneText;
     oneText.setFont(fonttext);
     oneText.setCharacterSize(30);
-    oneText.setString(L"1 игрок");
+    oneText.setString("1 Player");
     oneText.setFillColor(sf::Color::White);
     oneText.setPosition(777, 600);
     oneText.setOutlineThickness(0.4);
@@ -351,10 +351,18 @@ int main()
     sf::Text twoText;
     twoText.setFont(fonttext);
     twoText.setCharacterSize(30);
-    twoText.setString(L"2 игрока");
+    twoText.setString("2 Players");
     twoText.setFillColor(sf::Color::White);
     twoText.setPosition(1080, 600);
     twoText.setOutlineThickness(0.4);
+
+    sf::Text soonText;
+    soonText.setFont(fonttext);
+    soonText.setCharacterSize(30);
+    soonText.setString("Soon!");
+    soonText.setFillColor(sf::Color::White);
+    soonText.setPosition(1090, 350);
+    soonText.setOutlineThickness(0.4);
 
     //раздел статистики
     //текст статистики
@@ -412,18 +420,18 @@ int main()
     rulesContentText.setCharacterSize(25);
     rulesContentText.setString(
 
-        L"Блэкджек, также известный как '21', имеет простую суть:\n"
-        L"игроку нужно набрать 21 очко или ближайшее к этой\n"
-        L"цифре значение в руке, превышающее сумму в руке у,\n"
-        L"дилера но ни в коем случае не превышающее 21. Если\n"
-        L"участник превышает 21, он сгорает. В случае, если\n"
-        L"сумма очков одинакова у него и дилера, партия\n"
-        L"заканчивается вничью и каждая сторона остается при\n"
-        L" своем раскладе. В случае с картами, на которых есть\n"
-        L"цифры, вы получаете столько очков, сколько написано\n"
-        L"на карте. Если же на карте нет цифры, то очки\n"
-        L"даются следующим образом: Туз - 1 очко, Валет - 11 очков,\n"
-        L"Дама - 12 очков, Король - 13 очков.\n");
+        "Blackjack, also known as '21', has a simple essence:\n"
+        "the player needs to score 21 points or the closest to that\n"
+        "A digit has a value in its hand that exceeds the amount in\n"
+        "dealer hand, but in no case exceeding 21. If\n"
+        "the participant exceeds 21, he burns out. In the event, if\n"
+        "the sum of points is the same for him and the dealer, the\n"
+        "party ends in a draw and each side remains at\n"
+        "your own scenario. In the case of cards that have\n"
+        "numbers, you get as many points as written\n"
+        "on the map. If there is no number on the card, then points\n"
+        "They are given as follows: Ace - 1 point, Jack - 11 points,\n"
+        "The Queen - 12 points, the King - 13 points.\n");
 
     rulesContentText.setFillColor(sf::Color::White);
     rulesContentText.setOutlineThickness(1);
@@ -480,10 +488,10 @@ int main()
     sf::Text valueText;
     valueText.setFont(fonttext);
     valueText.setCharacterSize(40);
-    valueText.setString(L"Громкость музыки:");
+    valueText.setString("Music volume:");
     valueText.setFillColor(sf::Color::White);
     valueText.setOutlineColor(sf::Color::Black);
-    valueText.setPosition(775, 250);
+    valueText.setPosition(845, 250);
     valueText.setOutlineThickness(0.4);
 
     //ползунок музыки
@@ -499,10 +507,10 @@ int main()
     sf::Text themeText;
     themeText.setFont(fonttext);
     themeText.setCharacterSize(40);
-    themeText.setString(L"Темы:");
+    themeText.setString("Themes:");
     themeText.setFillColor(sf::Color::White);
     themeText.setOutlineColor(sf::Color::Black);
-    themeText.setPosition(925, 450);
+    themeText.setPosition(900, 450);
     themeText.setOutlineThickness(0.4);
     
     //темы
@@ -878,6 +886,7 @@ int main()
             window.draw(texturedevushka2);
             window.draw(texture1player);
             window.draw(texture2players);
+            window.draw(soonText);
             window.draw(twoText);
             window.draw(oneText);
             window.draw(backButton);
