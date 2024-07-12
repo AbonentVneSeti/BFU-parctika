@@ -6,6 +6,7 @@
 
 #include <random>
 #include <ctime>
+#define NOMINMAX
 #include <windows.h>
 
 #include <SFML/Graphics.hpp>
@@ -368,13 +369,6 @@ namespace AVS
                 (*window).draw(mask);
                 (*window).draw(ButtonSprite);
             }
-
-            /*sf::Vector2i MouseCoords = sf::Mouse::getPosition(*window);
-            sf::Vector2u WinSize = (*window).getSize();
-            if (MouseCoords.x <= WinSize.x && MouseCoords.y <= WinSize.y && MouseCoords.x >= position.x && MouseCoords.x <= position.x + normal.x && MouseCoords.y >= position.y && MouseCoords.y <= position.x + normal.y && sf::Mouse::isButtonPressed(MouseClickButton)) {
-                return true;
-            }
-            else return false;*/
         }
 
     };
@@ -385,12 +379,14 @@ namespace AVS
 int main()
 {
     //базовые настройки.
+    bool menu = false;
     bool game = true; // эта штука будет у тебя в меню выставлятся
+    srand(time(NULL));
 
     AVS::player player;
     AVS::player dealer;
 
-    int all_money = 2000;//все деньги
+    int all_money = 10000;//все деньги
     short start_size = 52;// размер колоды
     AVS::deck X; // колода откуда берутся карты
 
@@ -400,6 +396,10 @@ int main()
     bool win = false; // в случае победы
     bool lose = false; // в случае поражения
     bool push = false; // в случае пуша
+
+    bool get_move = false;
+    bool pass_move = false;
+    bool restart_move = false;
 
     //открытие окна
 //sf::Style::Fullscreen
@@ -446,7 +446,7 @@ int main()
     sf::Text getText;
     getText.setFont(font);
     getText.setCharacterSize(60);
-    getText.setString("get");
+    getText.setString("Get");
     getText.setFillColor(sf::Color::Black);
     getText.setPosition(50+100, 750+20);
     getText.setOutlineThickness(0.2);
@@ -466,6 +466,22 @@ int main()
     passText.setFillColor(sf::Color::Black);
     passText.setPosition(50 + 60, 900 + 20);
     passText.setOutlineThickness(0.2);
+
+    //restart
+    sf::RectangleShape restartButton(sf::Vector2f(300, 120));
+    restartButton.setFillColor(sf::Color(255, 255, 255, 128));
+    restartButton.setOutlineColor(sf::Color::Black);
+    restartButton.setOutlineThickness(2);
+    restartButton.setScale(1.0f, 0.9f);
+    restartButton.setPosition(50, 900);
+
+    sf::Text restartText;
+    restartText.setFont(font);
+    restartText.setCharacterSize(60);
+    restartText.setString("Restart");
+    restartText.setFillColor(sf::Color::Black);
+    restartText.setPosition(50 + 45, 900 + 15);
+    restartText.setOutlineThickness(0.2);
 
     //кнопки ставок
     AVS::Button *set_bet_100 = new AVS::Button(sf::Vector2f(500, 200), sf::Vector2f(300, 300), &window);
@@ -492,6 +508,22 @@ int main()
     (*set_bet_10000).setButtonTexture("assets/chips/10000.png", sf::Vector2i(0, 0), sf::Vector2i(300, 300));
     (*set_bet_10000).setMouseClickButton(sf::Mouse::Button::Left);
 
+    //выход в меню
+    sf::RectangleShape exit_from_game_Button(sf::Vector2f(300, 120));
+    exit_from_game_Button.setFillColor(sf::Color(255, 255, 255, 128));
+    exit_from_game_Button.setOutlineColor(sf::Color::Black);
+    exit_from_game_Button.setOutlineThickness(2);
+    exit_from_game_Button.setScale(1.0f, 0.9f);
+    exit_from_game_Button.setPosition(1570, 900);
+
+    sf::Text exit_from_game_Text;
+    exit_from_game_Text.setFont(font);
+    exit_from_game_Text.setCharacterSize(60);
+    exit_from_game_Text.setString("Exit");
+    exit_from_game_Text.setFillColor(sf::Color::Black);
+    exit_from_game_Text.setPosition(1570 + 100, 900 + 20);
+    exit_from_game_Text.setOutlineThickness(0.2);
+    
     //тексты значений
     //все деньги
     std::string all_money_str = std::to_string(all_money);
@@ -511,7 +543,46 @@ int main()
     moneyText.setPosition(20, 10);
     moneyText.setOutlineThickness(0.2);
     
+    //Игрок счет
+    std::string player_score_str = std::to_string(0);
+
+    sf::RectangleShape PlayerScoreFrame(sf::Vector2f(430, 60));
+    PlayerScoreFrame.setFillColor(sf::Color(255, 255, 255, 128));
+    PlayerScoreFrame.setOutlineColor(sf::Color::Black);
+    PlayerScoreFrame.setOutlineThickness(2);
+    PlayerScoreFrame.setScale(1.0f, 0.9f);
+    PlayerScoreFrame.setPosition(1470, 550);
+
+    sf::Text PlayerScoreText;
+    PlayerScoreText.setFont(fonttext);
+    PlayerScoreText.setCharacterSize(40);
+    PlayerScoreText.setString("Player's score: " + player_score_str);
+    PlayerScoreText.setFillColor(sf::Color::Black);
+    PlayerScoreText.setPosition(1470, 550);
+    PlayerScoreText.setOutlineThickness(0.2);
+
+    //Деалер счет
+    std::string dealer_score_str = std::to_string(0);
+
+    sf::RectangleShape dealerScoreFrame(sf::Vector2f(430, 60));
+    dealerScoreFrame.setFillColor(sf::Color(255, 255, 255, 128));
+    dealerScoreFrame.setOutlineColor(sf::Color::Black);
+    dealerScoreFrame.setOutlineThickness(2);
+    dealerScoreFrame.setScale(1.0f, 0.9f);
+    dealerScoreFrame.setPosition(1470, 470);
+
+    sf::Text dealerScoreText;
+    dealerScoreText.setFont(fonttext);
+    dealerScoreText.setCharacterSize(40);
+    dealerScoreText.setString("Dealer's score: " + player_score_str);
+    dealerScoreText.setFillColor(sf::Color::Black);
+    dealerScoreText.setPosition(1470, 470);
+    dealerScoreText.setOutlineThickness(0.2);
+
     //текущая ставка
+
+    std::string bet_str;
+
     sf::RectangleShape curr_bet_Frame(sf::Vector2f(115 + 27, 60));
     curr_bet_Frame.setFillColor(sf::Color(255, 255, 255, 128));
     curr_bet_Frame.setOutlineColor(sf::Color::Black);
@@ -527,7 +598,7 @@ int main()
     curr_bet_Text.setPosition(20, 80);
     curr_bet_Text.setOutlineThickness(0.2);
 
-    //штука при выборе ставки
+    //текст при выборе ставки
     //текущая ставка
     sf::RectangleShape chose_bet_frame(sf::Vector2f(365, 60));
     chose_bet_frame.setFillColor(sf::Color(255, 255, 255, 128));
@@ -544,6 +615,35 @@ int main()
     chose_bet_text.setPosition(510, 130);
     chose_bet_text.setOutlineThickness(0.2);
 
+    //текст при проигрыше всех денег
+    sf::RectangleShape full_lose_frame(sf::Vector2f(700, 200));
+    full_lose_frame.setFillColor(sf::Color(255, 255, 255, 128));
+    full_lose_frame.setOutlineColor(sf::Color::Black);
+    full_lose_frame.setOutlineThickness(2);
+    full_lose_frame.setScale(1.0f, 0.9f);
+    full_lose_frame.setPosition(610, 440);
+
+    sf::Text full_lose_text;
+    full_lose_text.setFont(fonttext);
+    full_lose_text.setCharacterSize(40);
+    full_lose_text.setString("You lose all your money!\nSo, to prevent you from leaving,\n we gave you some money.");
+    full_lose_text.setFillColor(sf::Color::Black);
+    full_lose_text.setPosition(620, 440);
+    full_lose_text.setOutlineThickness(0.2);
+
+    //lose text
+    sf::RectangleShape end_message_frame(sf::Vector2f(350, 120));
+    end_message_frame.setFillColor(sf::Color(255, 255, 255, 128));
+    end_message_frame.setOutlineColor(sf::Color::Black);
+    end_message_frame.setOutlineThickness(2);
+    end_message_frame.setScale(1.0f, 0.9f);
+
+    sf::Text end_message_text;
+    end_message_text.setFont(font);
+    end_message_text.setCharacterSize(80);
+    end_message_text.setFillColor(sf::Color::Black);
+    end_message_text.setOutlineThickness(0.2);
+
     while (window.isOpen())
     {
         
@@ -556,14 +656,51 @@ int main()
                 {
                     window.close();
                 }
+                else if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
+                {
+                    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+                    if (exit_from_game_Button.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                    {
+                        game = false;
+                        menu = true;
+                    }
+                    if (!first_move && !dealers_move && getButton.getGlobalBounds().contains(mousePos.x, mousePos.y))
+                    {
+                        get_move = true;
+                    }
+                    if (!first_move && !dealers_move && passButton.getGlobalBounds().contains(mousePos.x, mousePos.y) && !(win || lose || push))
+                    {
+                        pass_move = true;
+                    }
+                    if (!first_move && restartButton.getGlobalBounds().contains(mousePos.x, mousePos.y) && (win || lose || push))
+                    {
+                        restart_move = true;
+                    }
+                }
+            }
 
+            window.clear(sf::Color::White);
+            window.draw(background0);
+            if (chosing_bet) //выбор ставки
+            {
                 window.clear(sf::Color::White);
                 window.draw(background0);
-                if (chosing_bet)
+                if (all_money < 100)
                 {
-                    if(all_money >= 100) (*set_bet_100).draw();
-                    if(all_money >= 250) (*set_bet_250).draw();
-                    if(all_money >= 500) (*set_bet_500).draw();
+                    window.draw(full_lose_frame);
+                    window.draw(full_lose_text);
+                    window.display();
+                    Sleep(2500);
+                    all_money = 2500;
+                    all_money_str = std::to_string(all_money);
+                    moneyFrame.setSize(sf::Vector2f(240 + 27 * (all_money_str.size()), 60));
+                    moneyText.setString("All money: " + all_money_str);
+                }
+                else
+                {
+                    if (all_money >= 100) (*set_bet_100).draw();
+                    if (all_money >= 250) (*set_bet_250).draw();
+                    if (all_money >= 500) (*set_bet_500).draw();
                     if (all_money >= 1000) (*set_bet_1000).draw();
                     if (all_money >= 2500) (*set_bet_2500).draw();
                     if (all_money >= 10000) (*set_bet_10000).draw();
@@ -580,7 +717,7 @@ int main()
                     }
                     if ((*set_bet_10000).check_mouse_click())
                     {
-                        if(chosing_bet && all_money >= 10000) player.set_bet(10000);
+                        if (chosing_bet && all_money >= 10000) player.set_bet(10000);
                         chosing_bet = false;
                     }
                     if ((*set_bet_100).check_mouse_click())
@@ -600,13 +737,13 @@ int main()
                     }
                     if (!chosing_bet)
                     {
-                        std::string bet_str = std::to_string(player.get_bet().get_value());
+                        bet_str = std::to_string(player.get_bet().get_value());
                         curr_bet_Frame.setSize(sf::Vector2f(115 + 27 * (bet_str.size()), 60));
                         curr_bet_Text.setString("bet: " + bet_str);
 
                         all_money -= player.get_bet().get_value();
 
-                        std::string all_money_str = std::to_string(all_money);
+                        all_money_str = std::to_string(all_money);
                         moneyFrame.setSize(sf::Vector2f(240 + 27 * (all_money_str.size()), 60));
                         moneyText.setString("All money: " + all_money_str);
                     }
@@ -614,15 +751,183 @@ int main()
                     window.draw(chose_bet_text);
                 }
             }
+            else if (first_move)
+            {
+                X.fill_in_order(start_size);//перезаполняем колоду
+
+                for (int i = 0; i < 2; i++) //берутся по 2 карты игроку и дилеру, можно добавить сразу две анимации
+                {
+                    player.take_rand_card_from_deck(X);
+                    dealer.take_rand_card_from_deck(X);
+                }
+
+                player_score_str = std::to_string(player.check_value_in_hand());
+                PlayerScoreText.setString("Player score: " + player_score_str);
+
+
+                dealer_score_str = std::to_string(dealer.check_value_in_hand());
+                dealerScoreText.setString("Dealer score: " + dealer_score_str);
+
+                first_move = false;
+            }
+            else if (!dealers_move)
+            {
+                if(get_move)
+                {
+                    player.take_rand_card_from_deck(X);
+                    get_move = false;
+
+                   player_score_str = std::to_string(player.check_value_in_hand());
+                    PlayerScoreText.setString("Player score: " + player_score_str);
+                }
+                if (pass_move)
+                {
+                    dealers_move = true;
+                    pass_move = false;
+                }
+            }
+            else if (dealers_move)
+            {
+                if (dealer.check_value_in_hand() <= player.check_value_in_hand())
+                {
+                    Sleep(300);
+                    dealer.take_rand_card_from_deck(X);
+                    dealer_score_str = std::to_string(dealer.check_value_in_hand());
+                    dealerScoreText.setString("Dealer score: " + dealer_score_str);
+                }
+            }
+            {//check_win
+                short pltmp = player.check_value_in_hand();
+                short dltmp = dealer.check_value_in_hand();
+
+                if (pltmp == dltmp && pltmp >= 21)
+                    push = true;
+                else if (pltmp == 21)
+                    win = true;
+                else if (dltmp == 21)
+                    lose = true;
+                else if (pltmp > 21 && dltmp < 21)
+                    lose = true;
+                else if (pltmp < 21 && dltmp > 21)
+                    win = true;
+                else if (pltmp > 21 && dltmp > 21)
+                {
+                    if (pltmp < dltmp)
+                        win = true;
+                    else
+                        lose = true;
+                }
+                else if (dltmp > pltmp && dealers_move)
+                    lose = true;
+            }
+            if (win || lose || push)
+            {
+                if (win)
+                {
+                    end_message_frame.setSize(sf::Vector2f(310, 120));
+                    end_message_text.setString("You win!");
+                    end_message_frame.setPosition((1920 - 310)/2, (1080 - 120)/2);
+                    end_message_text.setPosition((1920 - 310)/2 + 10, (1080 - 120)/2);
+
+                    all_money += 2 * player.get_bet().get_value();
+                    player.set_bet(0);
+
+                    all_money_str = std::to_string(all_money);
+                    moneyFrame.setSize(sf::Vector2f(240 + 27 * (all_money_str.size()), 60));
+                    moneyText.setString("All money: " + all_money_str);
+
+
+                    bet_str = std::to_string(player.get_bet().get_value());
+                    curr_bet_Frame.setSize(sf::Vector2f(115 + 27 * (bet_str.size()), 60));
+                    curr_bet_Text.setString("bet: " + bet_str);
+                }
+                else if (lose)
+                {
+                    end_message_frame.setSize(sf::Vector2f(350, 120));
+                    end_message_text.setString("You lose!");
+                    end_message_frame.setPosition((1920 - 350) / 2, (1080 - 120) / 2);
+                    end_message_text.setPosition((1920 - 350) / 2 + 10, (1080 - 120) / 2);
+
+                    player.set_bet(0);
+
+                    all_money_str = std::to_string(all_money);
+                    moneyFrame.setSize(sf::Vector2f(240 + 27 * (all_money_str.size()), 60));
+                    moneyText.setString("All money: " + all_money_str);
+
+
+                    bet_str = std::to_string(player.get_bet().get_value());
+                    curr_bet_Frame.setSize(sf::Vector2f(115 + 27 * (bet_str.size()), 60));
+                    curr_bet_Text.setString("bet: " + bet_str);
+                }
+                else
+                {
+                    end_message_frame.setSize(sf::Vector2f(195, 120));
+                    end_message_text.setString("Push!");
+                    end_message_frame.setPosition((1920 - 195) / 2, (1080 - 120) / 2);
+                    end_message_text.setPosition((1920 - 195) / 2 + 10, (1080 - 120) / 2);
+
+                    all_money += player.get_bet().get_value();
+                    player.set_bet(0);
+
+                    all_money_str = std::to_string(all_money);
+                    moneyFrame.setSize(sf::Vector2f(240 + 27 * (all_money_str.size()), 60));
+                    moneyText.setString("All money: " + all_money_str);
+
+
+                    bet_str = std::to_string(player.get_bet().get_value());
+                    curr_bet_Frame.setSize(sf::Vector2f(115 + 27 * (bet_str.size()), 60));
+                    curr_bet_Text.setString("bet: " + bet_str);
+                }
+                window.draw(end_message_frame);
+                window.draw(end_message_text);
+
+                window.draw(restartButton);
+                window.draw(restartText);
+
+                if (restart_move)
+                {
+                    first_move = true;
+                    chosing_bet = true;
+                    dealers_move = false;
+                    
+                    win = false;
+                    lose = false;
+                    push = false;
+                    
+                    player.set_bet(0);
+                    player.clear_deck();
+                    dealer.clear_deck();
+                    restart_move = false;
+                }
+            }
+            
+            if (!first_move)
+            {
+                window.draw(PlayerScoreFrame);
+                window.draw(PlayerScoreText);
+                window.draw(dealerScoreFrame);
+                window.draw(dealerScoreText);
+            }
+
+            if (!first_move && !dealers_move && !(win || lose || push))
+            {
+                window.draw(passButton);
+                window.draw(passText);
+                window.draw(getButton);
+                window.draw(getText);
+            }
+
             window.draw(moneyFrame);
             window.draw(moneyText);
 
             window.draw(curr_bet_Frame);
             window.draw(curr_bet_Text);
+
+            window.draw(exit_from_game_Button);
+            window.draw(exit_from_game_Text);
         }
-
+        if (menu) break;
         window.display();
-
     }
 
 
