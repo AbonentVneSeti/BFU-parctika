@@ -259,15 +259,7 @@ int main()
     playButton.setOutlineColor(sf::Color::Black);
     playButton.setOutlineThickness(2);
     playButton.setScale(1.0f, 0.9f);
-    playButton.setPosition(900, 350);
-
-    //кнопка статистики
-    sf::RectangleShape statButton(sf::Vector2f(200, 50));
-    statButton.setFillColor(sf::Color(255, 255, 255, 128));
-    statButton.setOutlineColor(sf::Color::Black);
-    statButton.setOutlineThickness(2);
-    statButton.setScale(1.0f, 0.9f);
-    statButton.setPosition(900, 400);
+    playButton.setPosition(900, 400);
 
     //кнопка правил
     sf::RectangleShape rulesButton(sf::Vector2f(200, 50));
@@ -319,7 +311,7 @@ int main()
     playText.setCharacterSize(40);
     playText.setString("Play");
     playText.setFillColor(sf::Color::Black);
-    playText.setPosition(960, 347);
+    playText.setPosition(960, 397);
     playText.setOutlineThickness(0.2);
 
     sf::Texture player;
@@ -364,29 +356,9 @@ int main()
     soonText.setPosition(1090, 350);
     soonText.setOutlineThickness(0.4);
 
-    //раздел статистики
-    //текст статистики
-    sf::Text statText;
-    statText.setFont(font);
-    statText.setCharacterSize(40);
-    statText.setString("Statistic");
-    statText.setFillColor(sf::Color::Black);
-    statText.setPosition(925, 397);
-    statText.setOutlineThickness(0.2);
-
-    //Statistic
-    sf::Text statmainText;
-    statmainText.setFont(font);
-    statmainText.setCharacterSize(150);
-    statmainText.setString("Statistic");
-    statmainText.setFillColor(sf::Color::White);
-    statmainText.setOutlineThickness(2);
-    statmainText.setPosition(680, 40);
-    statmainText.setOutlineThickness(0.2);
-
 
     //рамка статистики
-    sf::Texture statramka;
+    /*sf::Texture statramka;
     if (!statramka.loadFromFile("assets/different/statramka.png"))
     {
         std::cerr << "Error to upload image statramka :(" << std::endl;
@@ -394,7 +366,7 @@ int main()
     }
     sf::Sprite texturestatramka(statramka);
     texturestatramka.setPosition(625, 200);
-    
+    */
 
     //раздел правил
     //текст правил
@@ -685,10 +657,203 @@ int main()
     sf::Sprite* currentCursor = &cursorSprite0;
 
 
+
+
+    //фишки
+    //100
+    sf::Texture sto;
+    if (!sto.loadFromFile("assets/chips/100.png"))
+    {
+        std::cerr << "Error to upload 100 :(" << std::endl;
+        return 404;
+    }
+    sf::Sprite stotexture(sto);
+    //250
+    sf::Texture dvesti;
+    if (!dvesti.loadFromFile("assets/chips/250.png"))
+    {
+        std::cerr << "Error to upload 250 :(" << std::endl;
+        return 404;
+    }
+    sf::Sprite dvestitexture(dvesti);
+    //500
+    sf::Texture pyatsot;
+    if (!pyatsot.loadFromFile("assets/chips/500.png"))
+    {
+        std::cerr << "Error to upload 500 :(" << std::endl;
+        return 404;
+    }
+    sf::Sprite pyatsottexture(pyatsot);
+    //1000
+    sf::Texture tisyacha;
+    if (!tisyacha.loadFromFile("assets/chips/1000.png"))
+    {
+        std::cerr << "Error to upload 1000 :(" << std::endl;
+        return 404;
+    }
+    sf::Sprite texturetisyacha(tisyacha);
+    //2500
+    sf::Texture dvepyat;
+    if (!dvepyat.loadFromFile("assets/chips/2500.png"))
+    {
+        std::cerr << "Error to upload 2500 :(" << std::endl;
+        return 404;
+    }
+    sf::Sprite dvepyattexture(dvepyat);
+    //10000
+    sf::Texture desyatk;
+    if (!desyatk.loadFromFile("assets/chips/10000.png"))
+    {
+        std::cerr << "Error to upload 10000 :(" << std::endl;
+        return 404;
+    }
+    sf::Sprite desyatktexture(desyatk);
+
+
+
+
+    //карты
+    //2
+    sf::Texture two;
+    if (!two.loadFromFile("assets/cards/2.png"))
+    {
+        std::cerr << "Error to upload 2 :(" << std::endl;
+        return 404;
+    }
+    sf::Sprite twotexture(two);
+    //3
+    sf::Texture three;
+    if (!three.loadFromFile("assets/cards/3.png"))
+    {
+        std::cerr << "Error to upload 3 :(" << std::endl;
+        return 404;
+    }
+    sf::Sprite threetexture(three);
+    //4
+    sf::Texture four;
+    if (!four.loadFromFile("assets/cards/4.png"))
+    {
+        std::cerr << "Error to upload 4 :(" << std::endl;
+        return 404;
+    }
+    sf::Sprite fourtexture(four);
+    //5
+    sf::Texture five;
+    if (!five.loadFromFile("assets/cards/5.png"))
+    {
+        std::cerr << "Error to upload 5 :(" << std::endl;
+        return 404;
+    }
+    sf::Sprite fivetexture(five);
+    //6
+    sf::Texture six;
+    if (!six.loadFromFile("assets/cards/6.png"))
+    {
+        std::cerr << "Error to upload 6 :(" << std::endl;
+        return 404;
+    }
+    sf::Sprite sixtexture(six);
+    //7
+    sf::Texture seven;
+    if (!seven.loadFromFile("assets/cards/7.png"))
+    {
+        std::cerr << "Error to upload 7 :(" << std::endl;
+        return 404;
+    }
+    sf::Sprite seventexture(seven);
+    //8
+    sf::Texture eight;
+    if (!eight.loadFromFile("assets/cards/8.png"))
+    {
+        std::cerr << "Error to upload 8 :(" << std::endl;
+        return 404;
+    }
+    sf::Sprite eighttexture(eight);
+    //9
+    sf::Texture nine;
+    if (!nine.loadFromFile("assets/cards/9.png"))
+    {
+        std::cerr << "Error to upload 3 :(" << std::endl;
+        return 404;
+    }
+    sf::Sprite ninetexture(nine);
+    //10
+    sf::Texture ten;
+    if (!ten.loadFromFile("assets/cards/10.png"))
+    {
+        std::cerr << "Error to upload 10 :(" << std::endl;
+        return 404;
+    }
+    sf::Sprite tentexture(ten);
+    //J
+    sf::Texture J;
+    if (!J.loadFromFile("assets/cards/J.png"))
+    {
+        std::cerr << "Error to upload J :(" << std::endl;
+        return 404;
+    }
+    sf::Sprite Jtexture(J);
+    //Q
+    sf::Texture Q;
+    if (!Q.loadFromFile("assets/cards/Q.png"))
+    {
+        std::cerr << "Error to upload Q :(" << std::endl;
+        return 404;
+    }
+    sf::Sprite Qtexture(Q);
+    //K
+    sf::Texture K;
+    if (!K.loadFromFile("assets/cards/K.png"))
+    {
+        std::cerr << "Error to upload K :(" << std::endl;
+        return 404;
+    }
+    sf::Sprite Ktexture(K);
+    //A
+    sf::Texture A;
+    if (!A.loadFromFile("assets/cards/A.png"))
+    {
+        std::cerr << "Error to upload A :(" << std::endl;
+        return 404;
+    }
+    sf::Sprite Atexture(A);
+
+
+
+
+    //рубашки карт
+    //красная
+    sf::Texture sr;
+    if (!sr.loadFromFile("assets/cards/shirtred.png"))
+    {
+        std::cerr << "Error to upload shirtred :(" << std::endl;
+        return 404;
+    }
+    sf::Sprite srtexture(sr);
+    //зелёная
+    sf::Texture sg;
+    if (!sg.loadFromFile("assets/cards/shirtgreen.png"))
+    {
+        std::cerr << "Error to upload shirtgreen :(" << std::endl;
+        return 404;
+    }
+    sf::Sprite sgtexture(sg);
+    //синяя
+    sf::Texture sb;
+    if (!sb.loadFromFile("assets/cards/shirtblue.png"))
+    {
+        std::cerr << "Error to upload shirtblue :(" << std::endl;
+        return 404;
+    }
+    sf::Sprite sbtexture(sb);
+
+
+
+
     //раздел вывода изображений
     //здесь компилятор разбирается, что ему нужно задействовать, а что нужно отключить...
     bool mutingmusic = false;
-    bool showPlay = false, showStatic = false, showRules = false, showSettings = false, showAuthors = false;
+    bool showPlay = false, showRules = false, showSettings = false, showAuthors = false;
     while (window.isOpen())
     {
         sf::Event event;
@@ -701,34 +866,29 @@ int main()
             else if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
             {
                 sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-                if (!showPlay && !showStatic && !showRules && !showSettings && !showAuthors && exitButtonRect.contains(mousePos.x, mousePos.y))
+                if (!showPlay  && !showRules && !showSettings && !showAuthors && exitButtonRect.contains(mousePos.x, mousePos.y))
                 {
                     window.close();
                 }
-                if (!showStatic && !showRules && !showSettings && !showAuthors && playButton.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
+                if (!showRules && !showSettings && !showAuthors && playButton.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
                 {
                     showPlay = true;
                 }
-                else if (!showPlay && !showRules && !showSettings && !showAuthors && statButton.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
-                {
-                    showStatic = true;
-                }
-                else if (!showPlay && !showStatic && !showRules && !showSettings && rulesButton.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
+                else if (!showPlay && !showRules && !showSettings && rulesButton.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
                 {
                     showRules = true;
                 }
-                else if (!showPlay && !showStatic && !showRules && !showAuthors && settingsButton.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
+                else if (!showPlay && !showRules && !showAuthors && settingsButton.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
                 {
                     showSettings = true;
                 }
-                else if (!showPlay && !showStatic && !showRules && !showSettings && authorsButton.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
+                else if (!showPlay && !showRules && !showSettings && authorsButton.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
                 {
                     showAuthors = true;
                 }
-                if ((showPlay || showStatic || showRules || showAuthors || showSettings) && backButton.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
+                if ((showPlay || showRules || showAuthors || showSettings) && backButton.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
                 {
                     showPlay = false;
-                    showStatic = false;
                     showRules = false;
                     showSettings = false;
                     showAuthors = false;
@@ -893,13 +1053,6 @@ int main()
             window.draw(backText);
         }
 
-        else if (showStatic)
-        {
-            window.draw(statmainText);
-            window.draw(texturestatramka);
-            window.draw(backButton);
-            window.draw(backText);
-        }
         //настройки
         else if (showSettings)
         {
@@ -947,13 +1100,11 @@ int main()
             window.draw(texturedevushka2);
             window.draw(blackjack);
             window.draw(playButton);
-            window.draw(statButton);
             window.draw(rulesButton);
             window.draw(settingsButton);
             window.draw(authorsButton);
             window.draw(exitButton);
             window.draw(playText);
-            window.draw(statText);
             window.draw(rulesText);
             window.draw(settingsText);
             window.draw(authorsText);
