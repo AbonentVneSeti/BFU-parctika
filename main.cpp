@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include <random>
+#include<windows.h>
 #include <ctime>
 
 
@@ -129,6 +130,7 @@ int main()
         std::cerr << "Error to upload musicred :(" << std::endl;
         return 404;
     }
+    musicmain.setVolume(5);
     if (mus0)
     {
         musicmain.play();
@@ -145,21 +147,21 @@ int main()
         std::cerr << "Error to upload musicred :(" << std::endl;
         return 404;
     }
-
+    musicred.setVolume(5);
     sf::Music musicgreen;
     if (!musicgreen.openFromFile("assets/different/musicgreen.wav"))
     {
         std::cerr << "Error to upload musicgreen :(" << std::endl;
         return 404;
     }
-
+    musicgreen.setVolume(5);
     sf::Music musicblue;
     if (!musicblue.openFromFile("assets/different/musicblue.wav"))
     {
         std::cerr << "Error to upload musicblue :(" << std::endl;
         return 404;
     }
-
+    musicblue.setVolume(5);
     sf::Texture muteTexture;
     if (!muteTexture.loadFromFile("assets/different/playmusic.png")) {
         std::cerr << "Error to upload image playmusic :(" << std::endl;
@@ -276,18 +278,6 @@ int main()
     soonText.setFillColor(sf::Color::White);
     soonText.setPosition(1090, 350);
     soonText.setOutlineThickness(0.4);
-
-
-    //рамка статистики
-    /*sf::Texture statramka;
-    if (!statramka.loadFromFile("assets/different/statramka.png"))
-    {
-        std::cerr << "Error to upload image statramka :(" << std::endl;
-        return 404;
-    }
-    sf::Sprite texturestatramka(statramka);
-    texturestatramka.setPosition(625, 200);
-    */
 
     //раздел правил
     //текст правил
@@ -414,7 +404,7 @@ int main()
         return 404;
     }
     sf::Sprite textureminibg1(minibg1);
-    textureminibg1.setPosition(800, 530);
+    textureminibg1.setPosition(800, 550);
 
     sf::Texture minibg2;
     if (!minibg2.loadFromFile("assets/different/minibg2.png"))
@@ -423,7 +413,7 @@ int main()
         return 404;
     }
     sf::Sprite textureminibg2(minibg2);
-    textureminibg2.setPosition(950, 530);
+    textureminibg2.setPosition(950, 550);
 
     sf::Texture minibg3;
     if (!minibg3.loadFromFile("assets/different/minibg3.png"))
@@ -432,7 +422,7 @@ int main()
         return 404;
     }
     sf::Sprite textureminibg3(minibg3);
-    textureminibg3.setPosition(1100, 530);
+    textureminibg3.setPosition(1100, 550);
 
     //подписи фонов
     sf::Text theme1Text;
@@ -441,7 +431,7 @@ int main()
     theme1Text.setString("Red");
     theme1Text.setFillColor(sf::Color::White);
     themeText.setOutlineColor(sf::Color::Black);
-    theme1Text.setPosition(805, 700);
+    theme1Text.setPosition(805, 710);
     theme1Text.setOutlineThickness(0.4);
 
     sf::Text theme2Text;
@@ -450,7 +440,7 @@ int main()
     theme2Text.setString("Green");
     theme2Text.setFillColor(sf::Color::White);
     theme2Text.setOutlineColor(sf::Color::Black);
-    theme2Text.setPosition(943, 700);
+    theme2Text.setPosition(943, 710);
     theme2Text.setOutlineThickness(0.4);
 
     sf::Text theme3Text;
@@ -459,7 +449,7 @@ int main()
     theme3Text.setString("Blue");
     theme3Text.setFillColor(sf::Color::White);
     theme3Text.setOutlineColor(sf::Color::Black);
-    theme3Text.setPosition(1105, 700);
+    theme3Text.setPosition(1105, 710);
     theme3Text.setOutlineThickness(0.4);
 
     //текст авторов
@@ -802,6 +792,7 @@ int main()
                 else if (!showPlay && !showRules && !showAuthors && settingsButton.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
                 {
                     showSettings = true;
+          
                 }
                 else if (!showPlay && !showRules && !showSettings && authorsButton.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
                 {
@@ -824,10 +815,10 @@ int main()
                         float sliderX = mousePos.x - sliderBackground.getPosition().x;
                         volume = sliderX / sliderBackground.getSize().x;
                         sliderThumb.setPosition(sliderBackground.getPosition().x + sliderX - sliderThumb.getSize().x / 2, sliderBackground.getPosition().y);
-                        musicred.setVolume(volume * 100);
-                        musicblue.setVolume(volume * 100);
-                        musicgreen.setVolume(volume * 100);
-                        musicmain.setVolume(volume * 100);
+                        musicred.setVolume(volume * 5);
+                        musicblue.setVolume(volume * 5);
+                        musicgreen.setVolume(volume * 5);
+                        musicmain.setVolume(volume * 5);
                     }
                     //кнопка мута звука для каждой из песен темы
                     if (muteButton.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
@@ -872,9 +863,8 @@ int main()
                                 muteButton.setTexture(muteTexture);
                             }
                         }
-                        else
+                        else if (bluemus)
                         {
-                            mutingmusic = !mutingmusic;
                             if (mutingmusic)
                             {
                                 musicblue.pause();
@@ -905,15 +895,13 @@ int main()
                            musicmain.pause();
                            musicblue.pause();
                            musicgreen.pause();
-                           musicred.play();
+                           if (!mutingmusic) musicred.play();
                            musicred.setLoop(true);
                        }
                     }
                     else if (textureminibg2.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
                     {
                        currentCursor = &cursorSprite2;
-                       musicgreen.play();
-                       musicgreen.setLoop(true);
                        sliderThumb.setFillColor(sf::Color(78, 123, 50, 255));
                        background0.setTexture(backgroundTexture2);
                        background0.setScale(
@@ -926,15 +914,13 @@ int main()
                            musicmain.pause();
                            musicred.pause();
                            musicblue.pause();
-                           musicgreen.play();
+                           if (!mutingmusic) musicgreen.play();
                            musicgreen.setLoop(true);
                        }
                     }
                     else if (textureminibg3.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
                     {
                        currentCursor = &cursorSprite3;
-                       musicblue.play();
-                       musicblue.setLoop(true);
                        sliderThumb.setFillColor(sf::Color(44, 72, 160, 255));
                        background0.setTexture(backgroundTexture3);
                        background0.setScale(
@@ -947,7 +933,7 @@ int main()
                            musicmain.pause();
                            musicred.pause();
                            musicgreen.pause();
-                           musicblue.play();
+                           if (!mutingmusic) musicblue.play();
                            musicblue.setLoop(true);
                        }
                     }
