@@ -784,6 +784,10 @@ int main()
                 if (!showRules && !showSettings && !showAuthors && playButton.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
                 {
                     showPlay = true;
+                    if (texture1player.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
+                    {
+  
+                    }
                 }
                 else if (!showPlay && !showRules && !showSettings && rulesButton.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos)))
                 {
