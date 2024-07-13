@@ -1816,6 +1816,8 @@ int main()
                 {
                     Sleep(300);
                     dealer.take_rand_card_from_deck(X, window, background0, fonttext);
+                    window.clear();
+                    window.draw(background0);
                     dealer_score_str = std::to_string(dealer.check_value_in_hand());
                     dealerScoreText.setString("Dealer score: " + dealer_score_str);
                 }
