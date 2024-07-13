@@ -230,7 +230,7 @@ namespace AVS
             other.erase(other.d_array.size() - 1);
         }
 
-        sf::Sprite& take_rand_card_from_deck(deck& other, sf::RenderWindow& wind, sf::Sprite background0, sf::Font fonttext) // берется случайная карта в колоде
+        void take_rand_card_from_deck(deck& other, sf::RenderWindow& wind, sf::Sprite background0, sf::Font fonttext) // берется случайная карта в колоде
         {
             if (other.d_array.size() == 0)
                 throw std::exception("[player:take_rand_card_from_deck] empty deck");
@@ -282,7 +282,6 @@ namespace AVS
             wind.draw(tmpsprite);
             wind.display();
             Sleep(2005);
-            return tmpsprite;
         }
 
         void take_card(card A) // берется заданная карта
