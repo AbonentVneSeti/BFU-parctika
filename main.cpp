@@ -124,13 +124,6 @@ namespace AVS
             d_array.erase(d_array.begin() + i);
         }
 
-        /*void draw_all_cards(sf::RenderWindow* wind)
-        {
-            if (d_array.size() > 0)
-                for (int i = 0; i < d_array.size(); i++)
-                    wind->draw(d_array[i].get_sprite());
-        }*/
-
         int size()
         {
             return d_array.size();
